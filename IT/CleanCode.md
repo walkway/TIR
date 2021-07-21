@@ -176,3 +176,57 @@ class A {
   - 따름 정리: 스레드는 가능한 독립적으로 구현하라
 - 다중 스레드를 쓰는 코드 부분을 다양한 환경에 쉽게 끼워 넣을 수 있게 스레드 코드를 구현하라
 - 다중 스레드 쓰는 코드 부분을 상황에 맞게 조율할 수 있게 작성하라
+
+### 냄새와 휴리스틱
+- 최소 놀람의 원칙 The Principle of Least Surprise
+  - 함수나 클래스는 다른 프로그래머가 당연하게 여길 만한 동작과 기능을 제공해야 한다.
+  - 신뢰하지 못하는 코드는 전체를 살펴보게 한다.
+- 중복을 발견할 때마다 추상화할 기회로 간주하라
+- 추상화는 저차원 상세 개념에서 고차원 일반 개념을 분리한다.
+  - 세부 구현과 관련한 상수, 변수, 유틸리티 함수는 기초 클래스에 넣으면 안된다.
+  ````
+  public interface Stack {
+  	Object pop() throws EmptyException;
+  	void push(Object o) throws FullException;
+  	double percentFull();
+  	class EmptyException extends Exception { }
+  	class FullException extends Exception { }
+  }
+  ````
+  - percentFull 함수는 추상화 수준이 바르지 않다. 어떤 구현은 꽉 찬 정도라는 개념이 타당하지만, 어떤 구현은 알 방법이 없다.
+  - 그러므로 함수는 BoundedStack 같은 파생 인터페이스에 어울린다.
+ - 재정의할 가능성이 있다면 static 함수보다 인스턴스 함수가 더 좋다.
+ - 이름과 기능을 일치시킨다.
+  ````
+  Date newDate = date.add(5);
+  ````
+   - 5일을 더하는 함수인지, 5주를 더하는지, 5시간을 더하는지 알 수 없다.
+   - 5일을 더해서 date 인스턴스를 변경하는 함수라면 addDaysTo 또는 increaseByDays
+   - date 인스턴스는 변경하지 않으면서 5일 뒤인 새 날짜를 반환한다면 daysLater 또는 daysSince
+ - 숨겨진 시간적인 결합
+ ````
+ // Worst
+ public class MoogDiver {
+ 	Gradient gradient;
+ 	List<Spline> splines;
+
+ 	public void dive(String reason) {
+ 		saturateGradient();
+ 		reticulateSplines();
+ 		diveForMoog(reason);
+ 	}
+ }
+
+ // Good
+  public class MoogDiver {
+ 	Gradient gradient;
+ 	List<Spline> splines;
+
+ 	public void dive(String reason) {
+ 		Gradient gradient = saturateGradient();
+ 		List<Spline> splines = reticulateSplines(gradient);
+ 		diveForMoog(splines, reason);
+ 	}
+ }
+ ````
+   - 세 함수가 실행되는 순서가 중요하다면, 일종의 연결 소자를 생성하여 시간적 결합을 노출한다. 함수가 복잡해지더라고 의도적으로 추가한 구문적인 복잡성이 원래 있던 시간적인 복잡성을 드러낸 것이다.
