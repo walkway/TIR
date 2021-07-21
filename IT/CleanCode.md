@@ -186,23 +186,23 @@ class A {
   - 세부 구현과 관련한 상수, 변수, 유틸리티 함수는 기초 클래스에 넣으면 안된다.
   ````
   public interface Stack {
-  	Object pop() throws EmptyException;
-  	void push(Object o) throws FullException;
-  	double percentFull();
-  	class EmptyException extends Exception { }
-  	class FullException extends Exception { }
+    Object pop() throws EmptyException;
+    void push(Object o) throws FullException;
+    double percentFull();
+    class EmptyException extends Exception { }
+    class FullException extends Exception { }
   }
   ````
   - percentFull 함수는 추상화 수준이 바르지 않다. 어떤 구현은 꽉 찬 정도라는 개념이 타당하지만, 어떤 구현은 알 방법이 없다.
   - 그러므로 함수는 BoundedStack 같은 파생 인터페이스에 어울린다.
  - 재정의할 가능성이 있다면 static 함수보다 인스턴스 함수가 더 좋다.
  - 이름과 기능을 일치시킨다.
-  ````
-  Date newDate = date.add(5);
-  ````
-  - 5일을 더하는 함수인지, 5주를 더하는지, 5시간을 더하는지 알 수 없다.
-  - 5일을 더해서 date 인스턴스를 변경하는 함수라면 addDaysTo 또는 increaseByDays
-  - date 인스턴스는 변경하지 않으면서 5일 뒤인 새 날짜를 반환한다면 daysLater 또는 daysSince
+   - 5일을 더하는 함수인지, 5주를 더하는지, 5시간을 더하는지 알 수 없다.
+   - 5일을 더해서 date 인스턴스를 변경하는 함수라면 addDaysTo 또는 increaseByDays
+   - date 인스턴스는 변경하지 않으면서 5일 뒤인 새 날짜를 반환한다면 daysLater 또는 daysSince
+    ````
+    Date newDate = date.add(5);
+    ````
 - 숨겨진 시간적인 결합
   ````
   // Worst
@@ -211,22 +211,22 @@ class A {
     List<Spline> splines;
 
     public void dive(String reason) {
- 		  saturateGradient();
- 		  reticulateSplines();
- 		  diveForMoog(reason);
- 	  }
+      saturateGradient();
+      reticulateSplines();
+      diveForMoog(reason);
+    }
    }
 
    // Good
    public class MoogDiver {
     Gradient gradient;
- 	  List<Spline> splines;
+    List<Spline> splines;
 
- 	  public void dive(String reason) {
- 		  Gradient gradient = saturateGradient();
- 		  List<Spline> splines = reticulateSplines(gradient);
- 		  diveForMoog(splines, reason);
- 	  }
+    public void dive(String reason) {
+      Gradient gradient = saturateGradient();
+      List<Spline> splines = reticulateSplines(gradient);
+      diveForMoog(splines, reason);
+    }
    }
   ````
   - 세 함수가 실행되는 순서가 중요하다면, 일종의 연결 소자를 생성하여 시간적 결합을 노출한다. 함수가 복잡해지더라고 의도적으로 추가한 구문적인 복잡성이 원래 있던 시간적인 복잡성을 드러낸 것이다.
