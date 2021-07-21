@@ -200,33 +200,33 @@ class A {
   ````
   Date newDate = date.add(5);
   ````
-   - 5일을 더하는 함수인지, 5주를 더하는지, 5시간을 더하는지 알 수 없다.
-   - 5일을 더해서 date 인스턴스를 변경하는 함수라면 addDaysTo 또는 increaseByDays
-   - date 인스턴스는 변경하지 않으면서 5일 뒤인 새 날짜를 반환한다면 daysLater 또는 daysSince
- - 숨겨진 시간적인 결합
- ````
- // Worst
- public class MoogDiver {
- 	Gradient gradient;
- 	List<Spline> splines;
-
- 	public void dive(String reason) {
- 		saturateGradient();
- 		reticulateSplines();
- 		diveForMoog(reason);
- 	}
- }
-
- // Good
+  - 5일을 더하는 함수인지, 5주를 더하는지, 5시간을 더하는지 알 수 없다.
+  - 5일을 더해서 date 인스턴스를 변경하는 함수라면 addDaysTo 또는 increaseByDays
+  - date 인스턴스는 변경하지 않으면서 5일 뒤인 새 날짜를 반환한다면 daysLater 또는 daysSince
+- 숨겨진 시간적인 결합
+  ````
+  // Worst
   public class MoogDiver {
- 	Gradient gradient;
- 	List<Spline> splines;
+    Gradient gradient;
+    List<Spline> splines;
 
- 	public void dive(String reason) {
- 		Gradient gradient = saturateGradient();
- 		List<Spline> splines = reticulateSplines(gradient);
- 		diveForMoog(splines, reason);
- 	}
- }
- ````
-   - 세 함수가 실행되는 순서가 중요하다면, 일종의 연결 소자를 생성하여 시간적 결합을 노출한다. 함수가 복잡해지더라고 의도적으로 추가한 구문적인 복잡성이 원래 있던 시간적인 복잡성을 드러낸 것이다.
+    public void dive(String reason) {
+ 		  saturateGradient();
+ 		  reticulateSplines();
+ 		  diveForMoog(reason);
+ 	  }
+   }
+
+   // Good
+   public class MoogDiver {
+    Gradient gradient;
+ 	  List<Spline> splines;
+
+ 	  public void dive(String reason) {
+ 		  Gradient gradient = saturateGradient();
+ 		  List<Spline> splines = reticulateSplines(gradient);
+ 		  diveForMoog(splines, reason);
+ 	  }
+   }
+  ````
+  - 세 함수가 실행되는 순서가 중요하다면, 일종의 연결 소자를 생성하여 시간적 결합을 노출한다. 함수가 복잡해지더라고 의도적으로 추가한 구문적인 복잡성이 원래 있던 시간적인 복잡성을 드러낸 것이다.
